@@ -1,4 +1,12 @@
 
+import '../fixtures/testPart/s0_browsing.cy.js'
+import '../fixtures/testPart/s1_offer.cy.js';
+import '../fixtures/testPart/s2_video.cy.js';
+import '../fixtures/testPart/s3_price.cy.js'
+import '../fixtures/testPart/s4_photo.cy.js';
+import '../fixtures/testPart/s5_form.cy.js';
+import '../fixtures/testPart/s6_footer.cy.js';
+import '../fixtures/testPart/s7_ToDo.cy.js';
 
 
 describe("template spec", () => {
@@ -7,312 +15,46 @@ describe("template spec", () => {
     cy.get(".nav--language > .screanName[value='cs']").click({ force: true });
   });
 
-  context ('basic project browsing', () => {
-
-
-    it("check language", () => {
-      cy.get("html").should("have.attr", "lang", "en");
-      cy.get(".nav--language > .screanName[value='cs']").click({ force: true });
-      cy.get(".click-away--title:nth-child(1)").contains("Láska je kliknutí daleko");
-
-      
-      cy.request('https://click-away-7fgctwzw4-janecekjiri1.vercel.app/')
-      .its('status')
-      .should('equal', 200);
-     
-    });
-  
-    it("open and close MENU", () => {
-      cy.get(".nav--leftSize--menuClick").click();
-      cy.window().then((win) => {
-        cy.wrap(win).its("document").then((doc) => {
-            cy.wrap(doc).find(".menu--header--icon").should("exist");
-            cy.wrap(doc).find(".menu--header--icon").click();
-          });
-      });
-    });
-  
-    it("open social media", () => {
-      cy.get(".nav--leftSize--menuClick").click();
-    
-     cy.get('.menu--footer--social--icons > a:nth-child(1)').should('have.attr', 'href', 'https://www.facebook.com/jiri.janecek.712' ),   
-     cy.get('.menu--footer--social--icons > a:nth-child(2)').should('have.attr', 'href', 'https://www.instagram.com/jirka.janecek1/' ),
-     cy.get('.menu--footer--social--icons > a:nth-child(3)').should('have.attr', 'href', 'https://www.linkedin.com/in/jirijanecek01/' ),
-     cy.get('.menu--footer--social--icons > a:nth-child(4)') .should('have.attr', 'href', 'https://www.youtube.com/channel/UC4RzynFtynvafmysAaYA9Gw' )
-  
-    });
-    // Text next projects
-    it.skip("wait for fix ---- next projects", () => {
-      cy.get(".nav--leftSize--menuClick").click();
-      cy.get('.menu--portfolio > :nth-child(1)').click(),
-      cy.get('[href="https://my-new-portfolio-rebuild.herokuapp.com/"]').invoke('attr', 'target', '_self').click()
-      cy.request('https://my-new-portfolio-rebuild.herokuapp.com/')
-      .its('status')
-      .should('equal', 200);
-    });
-    it.skip("wait for fix ---- next projects2", () => {
-      cy.get(".nav--leftSize--menuClick").click();
-      cy.get('.menu--portfolio > :nth-child(2)').click(),
-      cy.get('[href="https://wine-vajcner.herokuapp.com/"]').invoke('attr', 'target', '_self').click()
-      cy.request('https://wine-vajcner.herokuapp.com/')
-      .its('status')
-      .should('equal', 200);
-    });
-
-    it("next projects3", () => {
-      cy.get(".nav--leftSize--menuClick").click();
-      cy.get('.menu--portfolio > :nth-child(3)').click(),
-      cy.get('[href="https://food-order-portfolio.herokuapp.com/"]').invoke('attr', 'target', '_self').click()
-      cy.request({
-        url: 'https://food-order-portfolio.herokuapp.com/',
-        failOnStatusCode: false // Povolíme, aby selhal na jiný než 2xx status kódy
-      }).then((response) => {
-        expect(response.status).to.equal(503);
-      });
-    });
-
-
-    it("more information button", () => {
-      cy.get(".header--button > .click-away--button").click();
-      cy.get('.headerModal--bottom--close').click()
-      cy.get(".header--button > .click-away--button").click();
-      cy.get(".headerModal--body").should("exist");
-      cy.get('.headerModal--top--close ').click()
-      cy.get(".headerModal--body").should("not.exist");
-    });
-    
-    it.skip("Price button", () => {
-      // cy.get('.header--button > a > .click-away--button').click()
-      cy.get('.header--button > a > .click-away--button').click().then(() => {
-        // Ověření, že element s ID "price" je viditelný po zavolání scrollIntoView()
-        cy.get('#price').scrollIntoView().should('be.visible');
-        cy.get('#form').scrollIntoView().should('not.be.visible');
-      });
-      
-    });
-
-    it.skip("Navigation menu", () =>{})
-  })
-
-  context('Offer s1', () => {
-    it("Our offer is visible and have all information",() => {
-      cy.get('.sectionOne').should('be.visible')
-      cy.get('.section--sceleton')
-    cy.get(".section--sceleton").each((item, index) => {
-    cy.wrap(item).should("be.visible");
-    cy.wrap(item).find("img").should("be.visible");
-    cy.wrap(item).find("h2").should("exist");
-    cy.get('.status--taken');
-    cy.wrap(item).find("p").should("exist");
-    cy.get(` .sectionOne--sceleton--text > div > h4 > :nth-child(1) > .status--taken`)
-      .should('be.visible')
-      });
-    });
-  })
-
-  context('Video s2', () => {
-    it("Video is playing and is visible",() => {
-      cy.get('.sectionTwo').should('be.visible').and('exist')
-      cy.get('video').then(([videoEl]) => {
-        expect(videoEl.paused).to.equal(false);
-      });
-      cy.get('video').should('have.attr', 'autoplay')
-      cy.get('video').should('have.attr', 'loop');
-  })
-  ///////////////////////////////////////////////////////////////////////////
-  context.only('photo  s5,6', () => {
-    it("photo slider s5",() => {
-      cy.get('#navbar > a:nth-child(4)').click()
-      cy.get('.SectionFour').should('be.visible').and('exist')
-      cy.get('.sectionFour--Carousel > .container-carousal > .carousel').find('.carousel-indicator-item').should(($icons) => {
-        expect($icons).to.have.length(3);
-      });
-      for (let i = 1; i <= 3; i++) {
-        cy.get(`.carousel > .carousel--inner > .carousel--item:nth-child(${i}) > .imgSectionFour`)
-          .find('img')
-          .should(($img) => {
-            expect($img).to.have.length(3);
-          });
-      }
-
-      cy.get('.sectionFour--Carousel > .container-carousal > .carousel > .carousel-indicators > :nth-child(1)').click({force: true})
-      cy.get(':nth-child(1) > .imgSectionFour > :nth-child(1)').should('be.visible').and('exist')
-      cy.get(':nth-child(1) > .imgSectionFour > :nth-child(2)').should('be.visible').and('exist')
-      cy.get(':nth-child(1) > .imgSectionFour > :nth-child(3)').should('be.visible').and('exist')
-
-      cy.get('.sectionFour--Carousel > .container-carousal > .carousel > .carousel-indicators > :nth-child(2)').click({force: true})
-      cy.get(':nth-child(2) > .imgSectionFour > :nth-child(1)').should('be.visible').and('exist')
-      cy.get(':nth-child(2) > .imgSectionFour > :nth-child(2)').should('be.visible').and('exist')
-      cy.get(':nth-child(2) > .imgSectionFour > :nth-child(3)').should('be.visible').and('exist')
-
-      cy.get('.sectionFour--Carousel > .container-carousal > .carousel > .carousel-indicators > :nth-child(3)').click({force: true})
-      cy.get(':nth-child(3) > .imgSectionFour > :nth-child(1)').should('be.visible').and('exist')
-      cy.get(':nth-child(3) > .imgSectionFour > :nth-child(2)').should('be.visible').and('exist')
-      cy.get(':nth-child(3) > .imgSectionFour > :nth-child(3)').should('be.visible').and('exist')
-
-  })
-
-it('gallery s6', () => {
-
-  cy.get('#navbar > a:nth-child(5)').click()
-  cy.get('.sectionFive').should('be.visible').and('exist')
-  cy.get('.sectionFive--Carousel > .container-carousal > .carousel').find('.carousel-indicator-item').should(($icons) => {
-    expect($icons).to.have.length(4);
+  context('Scenario 0 navigation', () => { 
+    const { testNavigationSection } = require('../fixtures/testPart/s0_browsing.cy.js');
+    testNavigationSection();
   });
-    
-    cy.get('.sectionFive--Carousel > .container-carousal > .carousel > .carousel-indicators > :nth-child(1)').click({force: true})
-    cy.get(':nth-child(1) > .sectionFive--carousel--img--container > img').should('be.visible').and('exist')
-    cy.get('.sectionFive--Carousel > .container-carousal > .carousel > .carousel-indicators > :nth-child(2)').click({force:true})
-    cy.get(':nth-child(2) > .sectionFive--carousel--img--container > img').should('be.visible').and('exist')
-    cy.get('.sectionFive--Carousel > .container-carousal > .carousel > .carousel-indicators > :nth-child(3)').click({force:true})
-    cy.get(':nth-child(3) > .sectionFive--carousel--img--container > img').should('be.visible')
-    cy.get('.sectionFive--Carousel > .container-carousal > .carousel > .carousel-indicators > :nth-child(4)').click({force:true})
-    cy.get(':nth-child(4) > .sectionFive--carousel--img--container > img').should('be.visible')
 
-  })
-    
-    it('open and close photo gallery',()=> {
-      cy.get('#gallery > a > .click-away--button').should('have.text', 'Vice fotografii').and('be.enabled').click({force: true})
-      cy.get('#PhotoGallery').should('exist')
-      cy.get('.click-away--button').click()
-      cy.get('#PhotoGallery').should('not.exist')
-    })
-    
-    it.only('open sinfl photo in gallery',()=> {
-      cy.get('#gallery > a > .click-away--button').should('have.text', 'Vice fotografii').and('be.enabled').click({force: true})
+  context('Scenario 1 offer', () => { 
+    const { testOfferSection } = require('../fixtures/testPart/s1_offer.cy.js');
+    testOfferSection();
+  });
 
-      cy.get('.pics').should('exist').then(($pics) => {
-        const numberOfPics = $pics.length;
-      
-        for (let i = 0; i < numberOfPics; i++) {
-          // Pro každý prvek provedete akce
-          cy.get('.pics').eq(i).click({force:true});
-        cy.get('.modal.open').should('exist')
-        cy.get('img').should('be.visible')
-    }
+  context('Scenario 2 video', () => { 
+    const { testVideoSection } = require('../fixtures/testPart/s2_video.cy.js');
+    testVideoSection();
+  });
+
+  context.only('scenario 3 Price', () => { 
+    const { testPriceSection } = require('../fixtures/testPart/s3_price.cy.js');
+    testPriceSection();
+  });
+
+  context('Scenario 4 photo', () => { 
+    const { testPhotoSection } = require('../fixtures/testPart/s4_photo.cy.js');
+    testPhotoSection();
+  });
+
+  context('Scenario 5 form', () => {
+    const { testFormSection} = require('../fixtures/testPart/s5_form.cy.js')
+    testFormSection()
   })
 
-  cy.get('.click-away--button.returnButton--gallery').click()
-  cy.get('.modal.open').should('not.exist')
-  cy.get('#PhotoGallery').should('not.exist')
-  cy.get('#header').should('be.visible')
-    })
-  })
-
-
-  context('form  s7,8', () => {
-    it("valid form information",() => {
-      cy.get('#navbar > a:nth-child(6)').click()
-      cy.get('.sectionSixForm').should('be.visible').and('exist')
-
-    })
-  })
-
-    context('informations footer s09', () => {
-    it("social media button",() => {
-      cy.get('#footer').should('be.visible').and('exist')
-      cy.get('#footer')
-      cy.get('.footer--top > .footer--socialIcons').should('be.visible').and('exist')
- 
-      cy.get('.footer--top > .footer--socialIcons').find('a').should(($icons) => {
-        expect($icons).to.have.length(4);
-      });
-
-
-      cy.get('.footer--top > .footer--socialIcons > a:nth-child(1)').should('have.attr', 'href',"https://www.facebook.com/jiri.janecek.712")
-      cy.request('https://www.facebook.com/jiri.janecek.712')
-      .its('status')
-      .should('equal', 200);
-
-      cy.get('.footer--top > .footer--socialIcons > a:nth-child(2)').should('have.attr', 'href', "https://www.instagram.com/jirka.janecek1/")
-        // status code 999 
-      // cy.request('https://www.instagram.com/jirka.janecek1/')
-      // .its('status')
-      // .should('equal', 200);
-
-      cy.get('.footer--top > .footer--socialIcons > a:nth-child(3)').should('have.attr', 'href', "https://www.linkedin.com/in/jirijanecek01/")
-      // status code 999 
-      // cy.get('your-button-selector').should('be.enabled');
-      // cy.request('https://www.linkedin.com/in/jirijanecek01/')
-      // .its('status')
-      // .should('equal', 200);
-
-      cy.get('.footer--top > .footer--socialIcons > a:nth-child(4)').should('have.attr', 'href', "https://www.youtube.com/channel/UC4RzynFtynvafmysAaYA9Gw")
-      cy.request('https://www.youtube.com/channel/UC4RzynFtynvafmysAaYA9Gw')
-      .its('status')
-      .should('equal', 200);
-  })
-
-  it('button Price', () => {
-    cy.get('.footer--top--button > a > button').should('have.text', 'Ceník').and('be.enabled')
-  })
-  it.skip('wait for fix----- pop up text', () => {
-    cy.get(':nth-child(1) > ul > :nth-child(1)').click()
-    cy.get('[class*="Modal"]').should('exist')
-  })
-  it.skip('wait for fix-----Next projects open', () => {
-    cy.get('.footer--nextProject').should('be.visible')
-    cy.get('.footer--nextProject').find('h4').should(($projects) => {
-      expect($projects).to.have.length(3);
-    });
-
-    cy.get('.footer--nextProject > h4:nth-child(1)').should('have.attr', 'href','https://my-new-portfolio-rebuild.herokuapp.com/')
-    cy.get('.footer--nextProject > h4:nth-child(2)').should('have.attr', 'href','https://wine-vajcner.herokuapp.com/')
-    cy.get('.footer--nextProject > h4:nth-child(3)').should('have.attr', 'href','https://food-order-portfolio.herokuapp.com/')
-    
-    })
+  context('Scenario 6 footer', () => {
+    const {testFooterSection} = require ('../fixtures/testPart/s6_footer.cy.js')
+    testFooterSection()
   })
   
-  context('To do list last section', () => {
-    it("make new task",() => {
-      cy.get('.App').should('be.visible').and('exist')
-      cy.get('.app-sidebar-header').should('be.visible').and('exist')
-      cy.get('.app-sidebar-header').should('be.visible').and('exist')
-      cy.get('.app-sidebar-header > button').click()
-      cy.get('.app-sidebar-notes')
-      cy.get('.app-sidebar-notes').find('.app-sidebar-note').should('exist');
-  })
+  context('Scenario 7 To do list', () => {
+    const {testToDoSection} = require ('../fixtures/testPart/s7_ToDo.cy.js')
+    testToDoSection()
+})
 
-    let taskName = 'First task'
-    let descriptionTask = 'nakoupit, uklidit, cviči'
-    let taskName2 = 'Second task'
-    let descriptionTask2 = 'Ťuk, ťuk ...'
-    let changeTaskName = 'I am change'
-
-    it("Change text",()=>{
-      cy.get('.app-sidebar-header > button').click()
-      cy.get('.app-main-note-edit')
-      cy.get("#title[type='text']").should('have.value','Untitled Note')
-      cy.get("#title[type='text']").clear().type(taskName)
-      cy.get("#title[type='text']").should('have.value',taskName)
-      
-      cy.get("textarea[id='body']").click().type(descriptionTask)
-      
-      cy.get(".app-main-note-preview > .preview-title").should('have.text', taskName)
-      cy.get(".app-main-note-preview > .markdown-preview").should('have.text', descriptionTask)
-      
-      // change name and description > make second task > change first task
-      cy.get('.app-sidebar-header > button').click()
-      cy.get("#title[type='text']").clear().type(taskName2)
-      cy.get("textarea[id='body']").click().type(descriptionTask2)
-      
-      cy.contains(taskName).click();
-      cy.get("#title[type='text']").clear().type(changeTaskName)
-
-      cy.get('.app-sidebar-notes > :nth-child(1)').should('contain.text', changeTaskName)
-      cy.get('.app-sidebar-notes > :nth-child(2)').should('contain.text', taskName2)
-
-      // delete task
-      cy.get('.app-sidebar-notes').find('.app-sidebar-note').should(($notes) => {
-        expect($notes).to.have.length(2);
-      });
-      
-      cy.contains('.app-sidebar-note',taskName2).find('.sidebar-note-title > button').click()
-      cy.get('.app-sidebar-notes').find('.app-sidebar-note').should(($notes) => {
-        expect($notes).to.have.length(1);
-      });
-    })
-  })
 
 })
-});
+
